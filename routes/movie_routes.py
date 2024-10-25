@@ -13,8 +13,8 @@ def list_movies():
         movies = session.query(Movie).all()
     return render_template('list_movies.html', movies=movies)
 
-@login_required
 @movie_bp.route('/movie/add', methods=['GET', 'POST'])
+@login_required
 def add_movie():
     form = MovieForm()
     form.populate_director_choices()

@@ -13,8 +13,8 @@ def list_directors():
         directors = session.query(Director).all()
     return render_template('list_directors.html', directors=directors)
 
-@login_required
 @director_bp.route('/director/add', methods=['GET', 'POST'])
+@login_required
 def add_director():
     form = DirectorForm()
     if form.validate_on_submit():
