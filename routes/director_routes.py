@@ -4,6 +4,15 @@ from forms.director_form import DirectorForm
 from models.director_model import Director
 from services.session_scope import session_scope
 from flask_login import login_required
+from controllers.director_controller import DirectorController
+
+# Blueprint pour les routes API (JSON responses)
+director_api_bp = Blueprint('directors_api', __name__)
+
+# Routes API
+director_api_bp.route('/directors', methods=['GET'])(DirectorController.list_directors)
+director_api_bp.route('/directors', methods=['POST'])(DirectorController.add_director)
+
 
 director_bp = Blueprint('directors', __name__)
 

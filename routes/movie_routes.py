@@ -4,6 +4,19 @@ from forms.movie_form import MovieForm
 from models.movie_model import Movie
 from services.session_scope import session_scope
 from flask_login import login_required
+from controllers.movie_controller import MovieController
+
+# Blueprint pour les routes API (JSON responses)
+movie_api_bp = Blueprint('movies_api', __name__)
+
+# Routes API
+movie_api_bp.route('/movies', methods=['GET'])(MovieController.get_movies)
+movie_api_bp.route('/movies/<int:movie_id>', methods=['GET'])(MovieController.get_movie)
+movie_api_bp.route('/movies', methods=['POST'])(MovieController.add_movie)
+movie_api_bp.route('/movies/<int:movie_id>', methods=['PUT'])(MovieController.update_movie)
+movie_api_bp.route('/movies/<int:movie_id>', methods=['DELETE'])(MovieController.delete_movie)
+
+
 
 movie_bp = Blueprint('movies', __name__)
 

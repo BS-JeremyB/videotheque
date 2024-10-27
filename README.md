@@ -1,107 +1,108 @@
-# Videotheque Flask Application
 
-Cette application Flask est une vidéothèque permettant d'ajouter des films, de gérer les réalisateurs, d'afficher les films avec leurs réalisateurs associés, et de gérer les utilisateurs. Elle utilise **Flask**, **SQLAlchemy**, **Flask-Migrate**, **Flask-WTF** et **Flask-Login** pour la gestion des données, des formulaires, des utilisateurs, et des sessions de connexion.
+# Videotheque Project
 
-## Fonctionnalités
-
-- Ajouter des films
-- Ajouter des réalisateurs
-- Afficher la liste des films avec les réalisateurs
-- Gestion des utilisateurs avec système de connexion et de déconnexion
-- Utilisation de PostgreSQL comme base de données
-- Gestion des migrations avec Flask-Migrate
-- Utilisation de formulaires avec Flask-WTF
-- Sécurisation des pages et personnalisation du contenu pour les utilisateurs connectés
+Ce projet est une application Flask pour gérer une vidéothèque, permettant d'ajouter et de visualiser des films et des réalisateurs. Le projet inclut désormais une API RESTful pour accéder et manipuler les données via des endpoints JSON, ainsi qu'une gestion des utilisateurs avec authentification JWT.
 
 ## Prérequis
 
 - Python 3.x
-- PostgreSQL
+- PostgreSQL (pour la base de données)
 
 ## Installation
 
-### 1. Cloner le projet ou créer manuellement la structure
+1. **Cloner le projet** :
+   ```bash
+   git clone <url-du-projet>
+   cd videotheque
+   ```
 
-Clone le dépôt Git ou crée manuellement la structure des fichiers comme décrit dans le projet.
+2. **Créer un environnement virtuel et activer-le** :
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # Sur Linux/Mac
+   venv\Scripts\activate  # Sur Windows
+   ```
 
-```bash
-git clone <repository-url>
-cd videotheque
-```
+3. **Installer les dépendances** :
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-### 2. Créer un environnement virtuel
+4. **Configurer la base de données et les variables d'environnement** :
+   Créez un fichier `.env` dans le dossier racine avec les variables de configuration nécessaires :
+   ```env
+   SECRET_KEY=your_secret_key
+   JWT_SECRET_KEY=your_jwt_secret_key
+   SQLALCHEMY_DATABASE_URI=postgresql://username:password@localhost/dbname
+   ```
 
-Crée un environnement virtuel pour isoler les dépendances du projet.
+5. **Initialiser la base de données** :
+   ```bash
+   flask db init
+   flask db migrate
+   flask db upgrade
+   ```
 
-```bash
-python -m venv venv
-```
+## Lancer l'application
 
-Active l'environnement virtuel :
-
-- Sur **Windows** :
-  
-  ```bash
-  .\\venv\\Scripts\\activate
-  ```
-
-- Sur **Mac/Linux** :
-  
-  ```bash
-  source venv/bin/activate
-  ```
-
-### 3. Installer les dépendances
-
-Installe les dépendances Python nécessaires à l'application.
-
-```bash
-pip install -r requirements.txt
-```
-
-### 4. Configurer la base de données
-
-Modifie le fichier `config.py` pour indiquer tes informations de base de données PostgreSQL.
-
-```python
-class Config:
-    SECRET_KEY = 'dev_secret_key'
-    SQLALCHEMY_DATABASE_URI = 'postgresql://<username>:<password>@localhost/<dbname>'
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-```
-
-Assure-toi que PostgreSQL est installé et qu'une base de données est créée.
-
-### 5. Initialiser la base de données
-
-Initialise les migrations de la base de données avec Flask-Migrate, puis applique les migrations pour créer les tables dans la base de données.
-
-```bash
-flask db init
-flask db migrate
-flask db upgrade
-```
-
-### 6. Lancer l'application
-
-Lance l'application en mode développement avec la commande suivante :
-
+Pour lancer l'application, exécutez la commande suivante :
 ```bash
 flask run
 ```
 
-L'application sera disponible à l'adresse suivante : `http://127.0.0.1:5000`.
+L'application sera accessible à `http://localhost:5000`.
 
+## Utilisation de l'API
 
-## Dépendances
+L'API RESTful est accessible via le préfixe `/api`. Voici un aperçu des endpoints principaux :
 
-- Flask
-- Flask-SQLAlchemy
-- Flask-Migrate
-- Flask-WTF
-- Flask-Login
-- psycopg2-binary
+### Endpoints Films
 
-## Auteurs
+- **GET /api/movies** : Récupère la liste de tous les films.
+- **POST /api/movies** : Ajoute un nouveau film (nécessite un JWT pour l'authentification).
+- **PUT /api/movies/<movie_id>** : Modifie un film existant.
+- **DELETE /api/movies/<movie_id>** : Supprime un film existant.
 
-- Jérémy Bazin
+### Endpoints Réalisateurs
+
+- **GET /api/directors** : Récupère la liste de tous les réalisateurs.
+- **POST /api/directors** : Ajoute un nouveau réalisateur.
+
+### Endpoints Utilisateurs
+
+- **POST /auth/register** : Enregistre un nouvel utilisateur.
+- **POST /auth/login** : Connecte un utilisateur et retourne un token JWT.
+
+## Authentification JWT
+
+Certaines routes de l'API, comme `POST /api/movies`, nécessitent un token JWT pour authentifier l'utilisateur. Pour obtenir un token JWT :
+1. Utilisez l'endpoint **POST /auth/login** pour vous connecter en fournissant `username` et `password`.
+2. Ajoutez le token JWT reçu dans les en-têtes des requêtes pour les routes nécessitant une authentification :
+   ```
+   Authorization: Bearer <your_token>
+   ```
+
+## Dépendances supplémentaires
+
+Les nouvelles dépendances pour la gestion de l'API et des tokens JWT sont :
+- `Flask-JWT-Extended` : pour gérer l'authentification JWT.
+- `Marshmallow` : pour la sérialisation et désérialisation des données JSON.
+
+## Tests
+
+Pour exécuter les tests :
+```bash
+pytest
+```
+
+## Migrations
+
+Pour gérer les migrations de base de données (après avoir modifié les modèles) :
+```bash
+flask db migrate -m "Description de la migration"
+flask db upgrade
+```
+
+---
+
+Ce fichier `README.md` fournit les informations de base sur l'installation, l'utilisation de l'API, l'authentification JWT, et les nouvelles dépendances pour le projet Videotheque.
